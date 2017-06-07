@@ -2,22 +2,11 @@ from django.apps import AppConfig as DjangoApponfig
 from django.conf import settings
 
 from datetime import datetime
-from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
 from dateutil.tz import gettz
 
-
-from edc_appointment.apps import AppConfig as BaseEdcAppointmentAppConfig
-from edc_appointment.facility import Facility
 from edc_base.apps import AppConfig as BaseEdcBaseAppConfig
-from edc_constants.constants import FAILED_ELIGIBILITY
 from edc_device.apps import AppConfig as BaseEdcDeviceAppConfig
-from edc_lab.apps import AppConfig as BaseEdcLabAppConfig
-from edc_metadata.apps import AppConfig as BaseEdcMetadataAppConfig
 from edc_protocol.apps import AppConfig as BaseEdcProtocolAppConfig, SubjectType, Cap
-from edc_timepoint.apps import AppConfig as BaseEdcTimepointAppConfig
-from edc_timepoint.timepoint import Timepoint
-from edc_visit_tracking.apps import AppConfig as BaseEdcVisitTrackingAppConfig
-from edc_visit_tracking.constants import SCHEDULED, UNSCHEDULED, LOST_VISIT
 from edc_base.utils import get_utcnow
 from bcpp_clinic.navbars import navbars
 
@@ -64,7 +53,7 @@ class EdcProtocolAppConfig(BaseEdcProtocolAppConfig):
 
 
 class EdcBaseAppConfig(BaseEdcBaseAppConfig):
-    project_name = 'Ambition'
+    project_name = 'Clinic Screening'
     institution = 'Botswana-Harvard AIDS Institute'
     copyright = '2017-{}'.format(get_utcnow().year)
     license = None
