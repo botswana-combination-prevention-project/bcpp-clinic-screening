@@ -63,18 +63,12 @@ INSTALLED_APPS = [
     'edc_dashboard.apps.AppConfig',
     'edc_map.apps.AppConfig',
     'edc_consent.apps.AppConfig',
-    'bcpp_clinic.apps.EdcBaseAppConfig',
     'edc_registration.apps.AppConfig',
     'edc_visit_schedule.apps.AppConfig',
-    'bcpp_clinic.apps.EdcIdentifierAppConfig',
-    'bcpp_clinic.apps.EdcDeviceAppConfig',
-    'bcpp_clinic.apps.EdcProtocolAppConfig',
-    'bcpp_clinic.apps.EdcLabAppConfig',
-    'bcpp_clinic.apps.EdcMetadataAppConfig',
-    'bcpp_clinic.apps.EdcVisitTrackingAppConfig',
-    'bcpp_clinic.apps.EdcTimepointAppConfig',
-    'bcpp_clinic.apps.EdcAppointmentAppConfig',
-    'bcpp_clinic.apps.AppConfig',
+    'clinic_screening.apps.EdcIdentifierAppConfig',
+    'clinic_screening.apps.EdcDeviceAppConfig',
+    'clinic_screening.apps.EdcProtocolAppConfig',
+    'clinic_screening.apps.AppConfig',
 ]
 
 

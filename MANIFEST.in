@@ -1,2 +1,2 @@
 include AUTHORS CHANGES README.md LICENCE
-recursive-include bcpp_clinic/templates *
+recursive-include clinic_screening/templates *
