@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>clinic-screening</name>
+	<comment></comment>
+	<projects>
+		<project>bcpp-clinic</project>
+		<project>edc-base</project>
+		<project>edc-consent</project>
+		<project>edc-constants</project>
+		<project>edc-dashboard</project>
+		<project>edc-device</project>
+		<project>edc-model-wrapper</project>
+		<project>edc-registration</project>
+		<project>edc-search</project>
+		<project>edc-sync</project>
+		<project>edc-sync-files</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.python.pydev.PyDevBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.python.pydev.pythonNature</nature>
+	</natures>
+</projectDescription>
