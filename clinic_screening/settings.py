@@ -61,13 +61,12 @@ INSTALLED_APPS = [
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
     'edc_dashboard.apps.AppConfig',
-    'edc_map.apps.AppConfig',
     'edc_consent.apps.AppConfig',
     'edc_registration.apps.AppConfig',
+    'edc_identifier.apps.AppConfig',
     'edc_visit_schedule.apps.AppConfig',
-    'clinic_screening.apps.EdcIdentifierAppConfig',
-    'clinic_screening.apps.EdcDeviceAppConfig',
-    'clinic_screening.apps.EdcProtocolAppConfig',
+    'edc_device.apps.AppConfig',
+    'edc_protocol.apps.AppConfig',
     'clinic_screening.apps.AppConfig',
 ]
 
@@ -171,7 +170,6 @@ GIT_DIR = BASE_DIR.ancestor(1)
 
 KEY_PATH = '/Volumes/crypto_keys'
 
-CURRENT_MAP_AREA = 'test_community'
 DEVICE_ID = '21'
 DEVICE_ROLE = 'Client'
 LABEL_PRINTER = 'label_printer'

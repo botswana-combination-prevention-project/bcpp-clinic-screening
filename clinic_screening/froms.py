@@ -1,10 +1,21 @@
 from django import forms
 
-from ..models import ClinicEligibility
-from .model_form_mixin import CLinicModelFormMixin
+from edc_base.modelform_mixins import (
+    CommonCleanModelFormMixin, ApplicableValidationMixin,
+    RequiredFieldValidationMixin)
+
+from .models import ClinicEligibility, ClinicEnrollmentLoss
 
 
-class ClinicEligibilityForm(CLinicModelFormMixin):
+class CLinicSubjectModelFormMixin(CommonCleanModelFormMixin,
+                                  ApplicableValidationMixin,
+                                  RequiredFieldValidationMixin,
+                                  forms.ModelForm):
+
+    pass
+
+
+class ClinicEligibilityForm(CLinicSubjectModelFormMixin):
 
     def clean(self):
         cleaned_data = super(ClinicEligibilityForm, self).clean()
@@ -32,4 +43,16 @@ class ClinicEligibilityForm(CLinicModelFormMixin):
 
     class Meta:
         model = ClinicEligibility
+        fields = '__all__'
+
+
+class ClinicEnrollmentLossForm(CLinicSubjectModelFormMixin):
+
+    def clean(self):
+        cleaned_data = super(ClinicEnrollmentLossForm, self).clean()
+
+        return cleaned_data
+
+    class Meta:
+        model = ClinicEnrollmentLoss
         fields = '__all__'
