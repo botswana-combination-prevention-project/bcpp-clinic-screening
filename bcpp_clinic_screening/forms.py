@@ -1,16 +1,11 @@
 from django import forms
 
-from edc_base.modelform_mixins import (
-    CommonCleanModelFormMixin, ApplicableValidationMixin,
-    RequiredFieldValidationMixin)
+from edc_base.modelform_mixins import CommonCleanModelFormMixin
 
 from .models import ClinicEligibility, EnrollmentLoss
 
 
-class SubjectModelFormMixin(CommonCleanModelFormMixin,
-                            ApplicableValidationMixin,
-                            RequiredFieldValidationMixin,
-                            forms.ModelForm):
+class SubjectModelFormMixin(CommonCleanModelFormMixin, forms.ModelForm):
 
     pass
 
@@ -18,7 +13,7 @@ class SubjectModelFormMixin(CommonCleanModelFormMixin,
 class ClinicEligibilityForm(SubjectModelFormMixin):
 
     def clean(self):
-        cleaned_data = super(ClinicEligibilityForm, self).clean()
+        cleaned_data = super().clean()
         try:
             if self.instance.is_consented:
                 raise forms.ValidationError('Household member for this checklist has been consented. '
@@ -47,11 +42,6 @@ class ClinicEligibilityForm(SubjectModelFormMixin):
 
 
 class EnrollmentLossForm(SubjectModelFormMixin):
-
-    def clean(self):
-        cleaned_data = super(EnrollmentLossForm, self).clean()
-
-        return cleaned_data
 
     class Meta:
         model = EnrollmentLoss

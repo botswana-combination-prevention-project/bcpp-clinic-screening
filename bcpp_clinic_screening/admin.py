@@ -8,7 +8,7 @@ from edc_base.modeladmin_mixins import (
 from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 
 from .admin_site import bcpp_clinic_screening_admin
-from .froms import ClinicEligibilityForm, EnrollmentLossForm
+from .forms import ClinicEligibilityForm, EnrollmentLossForm
 from .models import EnrollmentLoss, ClinicEligibility
 
 
