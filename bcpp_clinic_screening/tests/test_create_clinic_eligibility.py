@@ -12,8 +12,7 @@ from ..models import ClinicEligibility
 class TestCreateClinicEligibility(TestCase):
 
     def setUp(self):
-        self.options = {}
-        self.options.update(
+        self.options = dict(
             report_datetime=timezone.now(),
             dob=(timezone.now() - relativedelta(years=25)).date(),
             part_time_resident=YES,

@@ -197,19 +197,10 @@ class ClinicEligibility (EligibilityIdentifierModelMixin, IdentityFieldsMixin, B
 
     history = HistoricalRecords()
 
-    def save(self, *args, **kwargs):
-        super(ClinicEligibility, self).save(*args, **kwargs)
-
     def __str__(self):
-        return "{} ({}) {}/{}".format(
-            self.first_name, self.initials, self.gender, self.age_in_years)
-
-    @property
-    def test_property(self):
-        return "This thing works cool"
+        return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
 
     class Meta:
-        app_label = "bcpp_clinic_screening"
         verbose_name = "Clinic Eligibility"
         verbose_name_plural = "Clinic Eligibility"
         unique_together = [
@@ -236,6 +227,5 @@ class EnrollmentLoss(BaseUuidModel):
     history = HistoricalRecords()
 
     class Meta:
-        app_label = 'bcpp_clinic_screening'
         verbose_name = "Clinic Enrollment Loss"
         verbose_name_plural = "Clinic Enrollment Loss"

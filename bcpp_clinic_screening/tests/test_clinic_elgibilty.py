@@ -4,9 +4,8 @@ from django.test import tag
 
 from edc_constants.constants import YES, NO
 
-from ..eligibility import (
-    AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator, LiteracyEvaluator,
-    Eligibility)
+from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
+from ..eligibility import LiteracyEvaluator, Eligibility
 
 
 @tag('clinic_eligibility')
