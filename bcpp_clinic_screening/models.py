@@ -21,9 +21,11 @@ from edc_constants.constants import UUID_PATTERN
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
 from .choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
+from .eligibility_identifier import EligibilityIdentifier
+from .managers import EligibilityManager
 
 
-class EligibilityIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
+class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
 
     def update_subject_identifier_on_save(self):
         """Overridden to not set the subject identifier on save.
@@ -41,7 +43,7 @@ class EligibilityIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, mode
         abstract = True
 
 
-class ClinicEligibility (EligibilityIdentifierModelMixin, IdentityFieldsMixin, BaseUuidModel):
+class ClinicEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
@@ -195,7 +197,24 @@ class ClinicEligibility (EligibilityIdentifierModelMixin, IdentityFieldsMixin, B
                    'Always null for non-clinic members.'),
     )
 
+    eligibility_identifier = models.CharField(
+        verbose_name='Eligibility Identifier',
+        max_length=50,
+        blank=True,
+        unique=True,
+        editable=False)
+
+    objects = EligibilityManager()
+
     history = HistoricalRecords()
+
+    def natural_key(self):
+        return (self.eligibility_identifier,)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.screening_identifier = EligibilityIdentifier().identifier
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
@@ -225,6 +244,10 @@ class EnrollmentLoss(BaseUuidModel):
         help_text='Do not include any personal identifiable information.')
 
     history = HistoricalRecords()
+    
+    
+    def natural_key(self):
+        return (self.clinic_eligibility.natural_key(),)
 
     class Meta:
         verbose_name = "Clinic Enrollment Loss"

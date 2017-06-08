@@ -5,7 +5,7 @@ from django.test import tag
 from edc_constants.constants import YES, NO
 
 from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
-from ..eligibility import LiteracyEvaluator, Eligibility
+from ..eligibility import LiteracyEvaluator, MinorEvaluator, Eligibility
 
 
 @tag('clinic_eligibility')
@@ -30,7 +30,7 @@ class TestClinicEligibility(unittest.TestCase):
 
     def test_eligibility_invalid_age_in_years_reasons(self):
         age_evaluator = AgeEvaluator(age=15)
-        self.assertIn('age<16', age_evaluator.reason)
+        self.assertIn('age<18', age_evaluator.reason)
         age_evaluator = AgeEvaluator(age=100)
         self.assertIn('age>64', age_evaluator.reason)
 
@@ -184,7 +184,7 @@ class TestClinicEligibility(unittest.TestCase):
             has_identity=YES,
             identity='317918511')
         self.assertFalse(obj.eligible)
-        self.assertIn('age<16', obj.reasons[0])
+        self.assertIn('age<18', obj.reasons[0])
 
     @tag('illerate')
     def test_eligibility_not_eligible1s(self):
@@ -200,3 +200,28 @@ class TestClinicEligibility(unittest.TestCase):
             identity='317918511')
         self.assertFalse(obj.eligible)
         self.assertIn('Illiterate', obj.reasons[0])
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor(self):
+        minor_evaluator = MinorEvaluator(age=16)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor1(self):
+        minor_evaluator = MinorEvaluator(age=16, guardian=NO)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor2(self):
+        minor_evaluator = MinorEvaluator(age=16, guardian=NO)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor3(self):
+        minor_evaluator = MinorEvaluator(age=18)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor4(self):
+        minor_evaluator = MinorEvaluator(age=16, guardian=YES)
+        self.assertTrue(minor_evaluator.eligible)
