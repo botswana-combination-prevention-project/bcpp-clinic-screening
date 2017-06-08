@@ -17,6 +17,7 @@ from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 from ..managers import EligibilityManager
+from ..eligibility_identifier import EligibilityIdentifier
 
 
 class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
