@@ -1,28 +1,22 @@
 import re
 
-from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
 from django.db import models
+from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
+
 
 from django_crypto_fields.fields.firstname_field import FirstnameField
 
 from edc_base.model_managers import HistoricalRecords
-from edc_base.model_managers.historical_records import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
-from edc_base.model_mixins.base_uuid_model import BaseUuidModel
-from edc_base.model_validators.date import datetime_not_future
-from edc_base.model_validators.date import datetime_not_future
-from edc_base.model_validators.dob import dob_not_future
+from edc_base.model_validators import datetime_not_future, dob_not_future
 from edc_base.utils import get_utcnow
-from edc_base.utils import get_utcnow
-from edc_consent.field_mixins.bw.identity_fields_mixin import IdentityFieldsMixin
+from edc_consent.field_mixins.bw import IdentityFieldsMixin
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
-from edc_constants.constants import NOT_APPLICABLE
-from edc_constants.constants import UUID_PATTERN
+from edc_constants.constants import NOT_APPLICABLE, UUID_PATTERN
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
-from .choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
-from .eligibility_identifier import EligibilityIdentifier
-from .managers import EligibilityManager
+from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
+from ..managers import EligibilityManager
 
 
 class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
@@ -43,7 +37,7 @@ class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.M
         abstract = True
 
 
-class ClinicEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, BaseUuidModel):
+class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
@@ -220,35 +214,6 @@ class ClinicEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, BaseU
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
 
     class Meta:
-        verbose_name = "Clinic Eligibility"
-        verbose_name_plural = "Clinic Eligibility"
+        verbose_name_plural = "Subject Eligibility"
         unique_together = [
             'first_name', 'initials', 'identity', 'additional_key']
-
-
-class EnrollmentLoss(BaseUuidModel):
-    """A system model auto created that captures the reason for a present BHS eligible member
-    who passes BHS eligibility but is not participating in the BHS."""
-
-    clinic_eligibility = models.OneToOneField(
-        ClinicEligibility, on_delete=models.PROTECT)
-
-    report_datetime = models.DateTimeField(
-        verbose_name='Report date',
-        default=get_utcnow,
-        validators=[datetime_not_future])
-
-    reason = models.TextField(
-        verbose_name='Reason not eligible',
-        max_length=500,
-        help_text='Do not include any personal identifiable information.')
-
-    history = HistoricalRecords()
-    
-    
-    def natural_key(self):
-        return (self.clinic_eligibility.natural_key(),)
-
-    class Meta:
-        verbose_name = "Clinic Enrollment Loss"
-        verbose_name_plural = "Clinic Enrollment Loss"

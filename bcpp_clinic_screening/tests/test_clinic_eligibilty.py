@@ -8,7 +8,7 @@ from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
 from ..eligibility import LiteracyEvaluator, MinorEvaluator, Eligibility
 
 
-@tag('clinic_eligibility')
+@tag('eligibility')
 class TestClinicEligibility(unittest.TestCase):
 
     def test_eligibility_invalid_age_in_years(self):
@@ -19,7 +19,6 @@ class TestClinicEligibility(unittest.TestCase):
         age_evaluator = AgeEvaluator(age=99)
         self.assertFalse(age_evaluator.eligible)
 
-    @tag('invalid_age_in_years1')
     def test_eligibility_invalid_age_in_years1(self):
 
         self.assertRaises(TypeError, AgeEvaluator)
@@ -70,7 +69,6 @@ class TestClinicEligibility(unittest.TestCase):
         literacy_evaluator = LiteracyEvaluator(literate=YES)
         self.assertTrue(literacy_evaluator.eligible)
 
-    @tag('literacy1')
     def test_eligibility_literacy1(self):
         """Assert illerate, no guardian is not eligible.
         """
@@ -79,7 +77,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(literacy_evaluator.eligible)
         self.assertTrue(literacy_evaluator.reason)
 
-    @tag('literacy1')
     def test_eligibility_literacy2(self):
         """Assert illerate, no guardian is not eligible.
         """
@@ -88,7 +85,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(literacy_evaluator.eligible)
         self.assertTrue(literacy_evaluator.reason)
 
-    @tag('literacy1')
     def test_eligibility_literacy3(self):
         """ Assert literate with guardian is eligible.
         """
@@ -129,7 +125,7 @@ class TestClinicEligibility(unittest.TestCase):
         """ Assert within age range and literate is eligible.
         """
         obj = Eligibility(
-            age=16,
+            age=18,
             literate=YES,
             guardian=None,
             legal_marriage=NO,
@@ -186,7 +182,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(obj.eligible)
         self.assertIn('age<18', obj.reasons[0])
 
-    @tag('illerate')
     def test_eligibility_not_eligible1s(self):
         """ Assert illiterate and no guardian is not eligible.
         """
@@ -206,22 +201,17 @@ class TestClinicEligibility(unittest.TestCase):
         minor_evaluator = MinorEvaluator(age=16)
         self.assertFalse(minor_evaluator.eligible)
 
-    @tag('minor_evaluator')
+    @tag('minor_evaluator1')
     def test_eligibility_minor1(self):
         minor_evaluator = MinorEvaluator(age=16, guardian=NO)
         self.assertFalse(minor_evaluator.eligible)
 
-    @tag('minor_evaluator')
+    @tag('minor_evaluator2')
     def test_eligibility_minor2(self):
-        minor_evaluator = MinorEvaluator(age=16, guardian=NO)
-        self.assertFalse(minor_evaluator.eligible)
-
-    @tag('minor_evaluator')
-    def test_eligibility_minor3(self):
         minor_evaluator = MinorEvaluator(age=18)
         self.assertFalse(minor_evaluator.eligible)
 
-    @tag('minor_evaluator')
-    def test_eligibility_minor4(self):
+    @tag('minor_evaluator3')
+    def test_eligibility_minor3(self):
         minor_evaluator = MinorEvaluator(age=16, guardian=YES)
         self.assertTrue(minor_evaluator.eligible)
