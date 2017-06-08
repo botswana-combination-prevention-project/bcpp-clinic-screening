@@ -49,7 +49,8 @@ class CitizenshipEvaluator:
 
         if not self.eligible and citizen == NO:
             if legal_marriage == YES and marriage_certificate == NO:
-                self.reason = 'Not a citizen, married to a citizen but does not have a marriage certificate.'
+                self.reason = ('Not a citizen, married to a citizen but does '
+                               'not have a marriage certificate.')
             elif legal_marriage == NO:
                 self.reason = 'Not a citizen and not married to a citizen..'
 
