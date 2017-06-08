@@ -6,7 +6,7 @@ from django.test import tag
 from edc_constants.constants import YES, NO
 
 from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
-from ..eligibility import LiteracyEvaluator, MinorEvaluator, Eligibility
+from ..eligibility import LiteracyEvaluator, Eligibility
 
 
 @tag('eligibility')
@@ -199,23 +199,3 @@ class TestClinicEligibility(unittest.TestCase):
             identity='317918511')
         self.assertFalse(obj.eligible)
         self.assertIn('Illiterate', obj.reasons[0])
-
-    @tag('minor_evaluator')
-    def test_eligibility_minor(self):
-        minor_evaluator = MinorEvaluator(age=16)
-        self.assertFalse(minor_evaluator.eligible)
-
-    @tag('minor_evaluator1')
-    def test_eligibility_minor1(self):
-        minor_evaluator = MinorEvaluator(age=16, guardian=NO)
-        self.assertFalse(minor_evaluator.eligible)
-
-    @tag('minor_evaluator2')
-    def test_eligibility_minor2(self):
-        minor_evaluator = MinorEvaluator(age=18)
-        self.assertFalse(minor_evaluator.eligible)
-
-    @tag('minor_evaluator3')
-    def test_eligibility_minor3(self):
-        minor_evaluator = MinorEvaluator(age=16, guardian=YES)
-        self.assertTrue(minor_evaluator.eligible)
