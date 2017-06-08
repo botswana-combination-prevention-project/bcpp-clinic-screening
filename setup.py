@@ -10,15 +10,15 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='clinic-screening',
+    name='bcpp-clinic-screening',
     version='0.1dev0',
     author=u'Coulson Thabo Kgathi',
     author_email='ckgathi@gmail.com',
     packages=find_packages(),
     include_package_data=True,
-    url='https://github.com/botswana-harvard/clinic-screening',
+    url='https://github.com/botswana-harvard/bcpp-clinic-screening',
     license='GPL license, see LICENSE',
-    description='BCPP Clinic Screenibg module.',
+    description='Screening models and forms for BCPP.',
     long_description=README,
     zip_safe=False,
     keywords='django bcpp clinic screening',
@@ -28,7 +28,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6.1',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
