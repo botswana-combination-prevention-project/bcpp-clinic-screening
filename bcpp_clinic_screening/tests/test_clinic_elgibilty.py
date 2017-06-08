@@ -9,7 +9,7 @@ from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
 from ..eligibility import LiteracyEvaluator, Eligibility
 
 
-@tag('clinic_eligibility')
+@tag('eligibility')
 class TestClinicEligibility(unittest.TestCase):
 
     def test_eligibility_invalid_age_in_years(self):
