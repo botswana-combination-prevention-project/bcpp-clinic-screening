@@ -6,6 +6,7 @@ from edc_base.model_managers import HistoricalRecords
 from edc_base.model_validators import datetime_not_future
 
 from .subject_eligibility import SubjectEligibility
+from ..managers import EnrollmentLossManager
 
 
 class EnrollmentLoss(BaseUuidModel):
@@ -25,7 +26,12 @@ class EnrollmentLoss(BaseUuidModel):
         max_length=500,
         help_text='Do not include any personal identifiable information.')
 
+    objects = EnrollmentLossManager()
+
     history = HistoricalRecords()
+
+    def natural_key(self):
+        return (self.subject_eligibility.natural_key(),)
 
     class Meta:
         verbose_name_plural = "Enrollment Loss"
