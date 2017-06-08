@@ -195,6 +195,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, IdentityFieldsMixin, 
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
 
     class Meta:
+        app_label = 'bcpp_clinic_screening'
         verbose_name_plural = "Subject Eligibility"
         unique_together = [
             'first_name', 'initials', 'identity', 'additional_key']

@@ -28,4 +28,5 @@ class EnrollmentLoss(BaseUuidModel):
     history = HistoricalRecords()
 
     class Meta:
+        app_label = 'bcpp_clinic_screening'
         verbose_name_plural = "Enrollment Loss"

@@ -5,7 +5,7 @@ from faker import Faker
 from model_mommy.recipe import Recipe, seq
 
 from edc_base.utils import get_utcnow
-from bcpp_clinic_screening.models import ClinicEligibility
+from bcpp_clinic_screening.models import SubjectEligibility
 from edc_constants.constants import YES, FEMALE, POS, NOT_APPLICABLE
 
 from .constants import ABLE_TO_PARTICIPATE
@@ -14,7 +14,7 @@ from .constants import ABLE_TO_PARTICIPATE
 fake = Faker()
 
 cliniceligibility = Recipe(
-    ClinicEligibility,
+    SubjectEligibility,
     report_datetime=get_utcnow,
     dob=(get_utcnow() - relativedelta(years=25)).date(),
     part_time_resident=YES,
