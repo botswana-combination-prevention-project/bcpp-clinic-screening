@@ -6,7 +6,7 @@ from django.utils import timezone
 from edc_constants.constants import MALE, NOT_APPLICABLE, YES, POS
 
 from ..constants import ABLE_TO_PARTICIPATE
-from ..models import ClinicEligibility
+from ..models import SubjectEligibility
 
 
 class TestCreateClinicEligibility(TestCase):
@@ -33,5 +33,5 @@ class TestCreateClinicEligibility(TestCase):
     def test_clinic_eligibility(self):
         """Test create clinic eligibilty.
         """
-        ClinicEligibility.objects.create(**self.options)
-        self.assertEqual(ClinicEligibility.objects.all().count(), 1)
+        SubjectEligibility.objects.create(**self.options)
+        self.assertEqual(SubjectEligibility.objects.all().count(), 1)

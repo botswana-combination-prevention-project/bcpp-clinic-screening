@@ -19,7 +19,6 @@ class TestClinicEligibility(unittest.TestCase):
         age_evaluator = AgeEvaluator(age=99)
         self.assertFalse(age_evaluator.eligible)
 
-    @tag('invalid_age_in_years1')
     def test_eligibility_invalid_age_in_years1(self):
 
         self.assertRaises(TypeError, AgeEvaluator)
@@ -70,7 +69,6 @@ class TestClinicEligibility(unittest.TestCase):
         literacy_evaluator = LiteracyEvaluator(literate=YES)
         self.assertTrue(literacy_evaluator.eligible)
 
-    @tag('literacy1')
     def test_eligibility_literacy1(self):
         """Assert illerate, no guardian is not eligible.
         """
@@ -79,7 +77,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(literacy_evaluator.eligible)
         self.assertTrue(literacy_evaluator.reason)
 
-    @tag('literacy1')
     def test_eligibility_literacy2(self):
         """Assert illerate, no guardian is not eligible.
         """
@@ -88,7 +85,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(literacy_evaluator.eligible)
         self.assertTrue(literacy_evaluator.reason)
 
-    @tag('literacy1')
     def test_eligibility_literacy3(self):
         """ Assert literate with guardian is eligible.
         """
@@ -186,7 +182,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertFalse(obj.eligible)
         self.assertIn('age<16', obj.reasons[0])
 
-    @tag('illerate')
     def test_eligibility_not_eligible1s(self):
         """ Assert illiterate and no guardian is not eligible.
         """

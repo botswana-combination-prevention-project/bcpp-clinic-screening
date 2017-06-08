@@ -8,8 +8,8 @@ from edc_base.modeladmin_mixins import (
 from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 
 from .admin_site import bcpp_clinic_screening_admin
-from .forms import ClinicEligibilityForm, EnrollmentLossForm
-from .models import EnrollmentLoss, ClinicEligibility
+from .forms import SubjectEligibilityForm, EnrollmentLossForm
+from .models import EnrollmentLoss, SubjectEligibility
 
 
 class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
@@ -22,10 +22,10 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructions
     empty_value_display = '-'
 
 
-@admin.register(ClinicEligibility, site=bcpp_clinic_screening_admin)
-class ClinicEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.ModelAdmin):
+@admin.register(SubjectEligibility, site=bcpp_clinic_screening_admin)
+class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.ModelAdmin):
 
-    form = ClinicEligibilityForm
+    form = SubjectEligibilityForm
 
     instructions = ['This form is a tool to assist the Interviewer to confirm the '
                     'Eligibility status of the subject. After entering the required items, click SAVE.']
