@@ -34,4 +34,5 @@ class EnrollmentLoss(BaseUuidModel):
         return (self.subject_eligibility.natural_key(),)
 
     class Meta:
+        app_label = 'bcpp_clinic_screening'
         verbose_name_plural = "Enrollment Loss"
