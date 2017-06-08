@@ -11,14 +11,13 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 import configparser
 import os
-from unipath import Path
 import sys
 
 from django.core.management.color import color_style
 from pathlib import PurePath
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 style = color_style()
 
@@ -166,9 +165,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, APP_NAME, 'media')
 
 MEDIA_URL = '/media/'
 
-GIT_DIR = BASE_DIR.ancestor(1)
+GIT_DIR = BASE_DIR
+KEY_PATH = os.path.join(str(PurePath(BASE_DIR).parent), 'crypto_fields')
 
-KEY_PATH = '/Volumes/crypto_keys'
 
 DEVICE_ID = '21'
 DEVICE_ROLE = 'Client'
