@@ -25,6 +25,17 @@ class AgeEvaluator:
                 self.reason = f'age>{self.adult_upper}'
 
 
+class MinorEvaluator:
+
+    def __init__(self, age=None, guardian=None, minor_lower=None, minor_upper=None):
+        app_config = django_apps.get_app_config('bcpp_clinic_screening')
+        self.minor_lower = minor_lower or app_config.eligibility_age_minor_lower
+        self.minor_upper = minor_upper or app_config.eligibility_age_minor_upper
+        self.eligible = None
+        if self.minor_upper >= age >= self.minor_lower and guardian == YES:
+            self.eligible = True
+
+
 class IdentityEvaluator:
 
     def __init__(self, has_identity=None, identity=None):

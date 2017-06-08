@@ -1,6 +1,7 @@
 etc/*
 *.py[cod]
 *.sh
+*.prefs
 .project
 .pydevproject
 .settings

@@ -1,35 +1,39 @@
 import unittest
 
+from django.apps import apps as django_apps
 from django.test import tag
 
 from edc_constants.constants import YES, NO
 
 from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
-from ..eligibility import LiteracyEvaluator, Eligibility
+from ..eligibility import LiteracyEvaluator, MinorEvaluator, Eligibility
 
 
-@tag('clinic_eligibility')
+@tag('eligibility')
 class TestClinicEligibility(unittest.TestCase):
 
     def test_eligibility_invalid_age_in_years(self):
-        age_evaluator = AgeEvaluator(age=15)
-        self.assertFalse(age_evaluator.eligible)
-        age_evaluator = AgeEvaluator(age=18)
-        self.assertTrue(age_evaluator.eligible)
-        age_evaluator = AgeEvaluator(age=99)
+        app_config = django_apps.get_app_config('bcpp_clinic_screening')
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_lower - 1)
         self.assertFalse(age_evaluator.eligible)
 
-    def test_eligibility_invalid_age_in_years1(self):
-
-        self.assertRaises(TypeError, AgeEvaluator)
-        age_evaluator = AgeEvaluator(age=18)
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_lower)
         self.assertTrue(age_evaluator.eligible)
-        age_evaluator = AgeEvaluator(age=99)
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_upper)
+        self.assertTrue(age_evaluator.eligible)
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_upper + 1)
         self.assertFalse(age_evaluator.eligible)
 
     def test_eligibility_invalid_age_in_years_reasons(self):
         age_evaluator = AgeEvaluator(age=15)
-        self.assertIn('age<16', age_evaluator.reason)
+        self.assertIn('age<18', age_evaluator.reason)
         age_evaluator = AgeEvaluator(age=100)
         self.assertIn('age>64', age_evaluator.reason)
 
@@ -125,7 +129,7 @@ class TestClinicEligibility(unittest.TestCase):
         """ Assert within age range and literate is eligible.
         """
         obj = Eligibility(
-            age=16,
+            age=18,
             literate=YES,
             guardian=None,
             legal_marriage=NO,
@@ -180,7 +184,7 @@ class TestClinicEligibility(unittest.TestCase):
             has_identity=YES,
             identity='317918511')
         self.assertFalse(obj.eligible)
-        self.assertIn('age<16', obj.reasons[0])
+        self.assertIn('age<18', obj.reasons[0])
 
     def test_eligibility_not_eligible1s(self):
         """ Assert illiterate and no guardian is not eligible.
@@ -195,3 +199,23 @@ class TestClinicEligibility(unittest.TestCase):
             identity='317918511')
         self.assertFalse(obj.eligible)
         self.assertIn('Illiterate', obj.reasons[0])
+
+    @tag('minor_evaluator')
+    def test_eligibility_minor(self):
+        minor_evaluator = MinorEvaluator(age=16)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator1')
+    def test_eligibility_minor1(self):
+        minor_evaluator = MinorEvaluator(age=16, guardian=NO)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator2')
+    def test_eligibility_minor2(self):
+        minor_evaluator = MinorEvaluator(age=18)
+        self.assertFalse(minor_evaluator.eligible)
+
+    @tag('minor_evaluator3')
+    def test_eligibility_minor3(self):
+        minor_evaluator = MinorEvaluator(age=16, guardian=YES)
+        self.assertTrue(minor_evaluator.eligible)
