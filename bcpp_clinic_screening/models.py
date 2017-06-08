@@ -20,7 +20,7 @@ from edc_constants.constants import NOT_APPLICABLE
 from edc_constants.constants import UUID_PATTERN
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
-from bcpp_clinic_screening import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
+from .choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 
 
 class EligibilityIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):

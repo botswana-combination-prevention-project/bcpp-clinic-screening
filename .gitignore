@@ -5,6 +5,7 @@ db.sqlite3
 .DS_Store
 *.pyc
 etc/*
+bcpp_clinic_screening/__pycache__/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
