@@ -7,8 +7,8 @@ class TestNaturalKey(SyncTestSerializerMixin, TestCase):
 
     @tag('natural_key')
     def test_natural_key_attrs(self):
-        self.sync_test_natural_key_attr('bcpp_clinic')
+        self.sync_test_natural_key_attr('clinic_screening')
 
     @tag('natural_key')
     def test_get_by_natural_key_attr(self):
-        self.sync_test_get_by_natural_key_attr('bcpp_clinic')
+        self.sync_test_get_by_natural_key_attr('clinic_screening')

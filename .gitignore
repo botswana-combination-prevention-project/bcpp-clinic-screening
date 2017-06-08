@@ -3,6 +3,7 @@ db.sqlite3
 .pydevproject
 .settings
 .DS_Store
+*.pyc
 etc/*
 
 # Byte-compiled / optimized / DLL files
@@ -55,7 +56,6 @@ coverage.xml
 # Translations
 *.mo
 *.pot
-*.pyc
 
 # Django stuff:
 *.log
