@@ -7,9 +7,9 @@ from edc_base.modeladmin_mixins import (
     ModelAdminReadOnlyMixin, ModelAdminInstitutionMixin)
 from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 
-from .admin_site import clinic_screening_admin
-from .froms import ClinicEligibilityForm, ClinicEnrollmentLossForm
-from .models import ClinicEnrollmentLoss, ClinicEligibility
+from .admin_site import bcpp_clinic_screening_admin
+from .froms import ClinicEligibilityForm, EnrollmentLossForm
+from .models import EnrollmentLoss, ClinicEligibility
 
 
 class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
@@ -22,7 +22,7 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructions
     empty_value_display = '-'
 
 
-@admin.register(ClinicEligibility, site=clinic_screening_admin)
+@admin.register(ClinicEligibility, site=bcpp_clinic_screening_admin)
 class ClinicEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.ModelAdmin):
 
     form = ClinicEligibilityForm
@@ -76,10 +76,10 @@ class ClinicEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.Mo
     )
 
 
-@admin.register(ClinicEnrollmentLoss, site=clinic_screening_admin)
+@admin.register(EnrollmentLoss, site=bcpp_clinic_screening_admin)
 class ClinicEnrollmentLossAdmin(ModelAdminMixin, admin.ModelAdmin):
 
-    form = ClinicEnrollmentLossForm
+    form = EnrollmentLossForm
 
     fields = ('clinic_eligibility', 'report_datetime', 'reason')
 

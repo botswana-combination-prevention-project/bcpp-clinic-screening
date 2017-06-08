@@ -22,7 +22,7 @@ BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 style = color_style()
 
-APP_NAME = 'clinic_screening'
+APP_NAME = 'bcpp_clinic_screening'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'edc_visit_schedule.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
-    'clinic_screening.apps.AppConfig',
+    'bcpp_clinic_screening.apps.AppConfig',
 ]
 
 
@@ -94,7 +94,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'clinic_screening.urls'
+ROOT_URLCONF = 'bcpp_clinic_screening.urls'
 
 TEMPLATES = [
     {
@@ -112,7 +112,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'clinic_screening.wsgi.application'
+WSGI_APPLICATION = 'bcpp_clinic_screening.wsgi.application'
 
 
 # Database

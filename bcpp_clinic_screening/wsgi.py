@@ -1,5 +1,5 @@
 """
-WSGI config for clinic_screening project.
+WSGI config for bcpp_clinic_screening project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "clinic_screening.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bcpp_clinic_screening.settings")
 
 application = get_wsgi_application()

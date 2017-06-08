@@ -20,7 +20,7 @@ from edc_constants.constants import NOT_APPLICABLE
 from edc_constants.constants import UUID_PATTERN
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
-from .choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
+from bcpp_clinic_screening import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 
 
 class EligibilityIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
@@ -209,14 +209,14 @@ class ClinicEligibility (EligibilityIdentifierModelMixin, IdentityFieldsMixin, B
         return "This thing works cool"
 
     class Meta:
-        app_label = "clinic_screening"
+        app_label = "bcpp_clinic_screening"
         verbose_name = "Clinic Eligibility"
         verbose_name_plural = "Clinic Eligibility"
         unique_together = [
             'first_name', 'initials', 'identity', 'additional_key']
 
 
-class ClinicEnrollmentLoss(BaseUuidModel):
+class EnrollmentLoss(BaseUuidModel):
     """A system model auto created that captures the reason for a present BHS eligible member
     who passes BHS eligibility but is not participating in the BHS."""
 
@@ -235,11 +235,7 @@ class ClinicEnrollmentLoss(BaseUuidModel):
 
     history = HistoricalRecords()
 
-    def natural_key(self):
-        return (self.report_datetime, ) + self.household_member.natural_key()
-    natural_key.dependencies = ['member.householdmember', ]
-
     class Meta:
-        app_label = 'clinic_screening'
+        app_label = 'bcpp_clinic_screening'
         verbose_name = "Clinic Enrollment Loss"
         verbose_name_plural = "Clinic Enrollment Loss"

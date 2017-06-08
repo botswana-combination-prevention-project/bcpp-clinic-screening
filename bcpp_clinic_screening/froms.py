@@ -4,18 +4,18 @@ from edc_base.modelform_mixins import (
     CommonCleanModelFormMixin, ApplicableValidationMixin,
     RequiredFieldValidationMixin)
 
-from .models import ClinicEligibility, ClinicEnrollmentLoss
+from .models import ClinicEligibility, EnrollmentLoss
 
 
-class CLinicSubjectModelFormMixin(CommonCleanModelFormMixin,
-                                  ApplicableValidationMixin,
-                                  RequiredFieldValidationMixin,
-                                  forms.ModelForm):
+class SubjectModelFormMixin(CommonCleanModelFormMixin,
+                            ApplicableValidationMixin,
+                            RequiredFieldValidationMixin,
+                            forms.ModelForm):
 
     pass
 
 
-class ClinicEligibilityForm(CLinicSubjectModelFormMixin):
+class ClinicEligibilityForm(SubjectModelFormMixin):
 
     def clean(self):
         cleaned_data = super(ClinicEligibilityForm, self).clean()
@@ -46,13 +46,13 @@ class ClinicEligibilityForm(CLinicSubjectModelFormMixin):
         fields = '__all__'
 
 
-class ClinicEnrollmentLossForm(CLinicSubjectModelFormMixin):
+class EnrollmentLossForm(SubjectModelFormMixin):
 
     def clean(self):
-        cleaned_data = super(ClinicEnrollmentLossForm, self).clean()
+        cleaned_data = super(EnrollmentLossForm, self).clean()
 
         return cleaned_data
 
     class Meta:
-        model = ClinicEnrollmentLoss
+        model = EnrollmentLoss
         fields = '__all__'
