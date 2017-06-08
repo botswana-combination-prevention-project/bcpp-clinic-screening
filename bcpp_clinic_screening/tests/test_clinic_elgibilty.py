@@ -1,5 +1,6 @@
 import unittest
 
+from django.apps import apps as django_apps
 from django.test import tag
 
 from edc_constants.constants import YES, NO
@@ -12,11 +13,22 @@ from ..eligibility import LiteracyEvaluator, Eligibility
 class TestClinicEligibility(unittest.TestCase):
 
     def test_eligibility_invalid_age_in_years(self):
-        age_evaluator = AgeEvaluator(age=15)
+        app_config = django_apps.get_app_config('bcpp_clinic_screening')
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_lower - 1)
         self.assertFalse(age_evaluator.eligible)
-        age_evaluator = AgeEvaluator(age=18)
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_lower)
         self.assertTrue(age_evaluator.eligible)
-        age_evaluator = AgeEvaluator(age=99)
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_upper)
+        self.assertTrue(age_evaluator.eligible)
+
+        age_evaluator = AgeEvaluator(
+            age=app_config.eligibility_age_adult_upper + 1)
         self.assertFalse(age_evaluator.eligible)
 
     def test_eligibility_invalid_age_in_years1(self):
