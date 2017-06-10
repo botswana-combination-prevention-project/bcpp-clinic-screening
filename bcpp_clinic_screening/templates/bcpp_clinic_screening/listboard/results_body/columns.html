@@ -14,8 +14,8 @@
 </td>
 <td>{{ result.eligibility_identifier }} </td>
 <td>
-	{% if not result.eligible %}
-		Not Eligible: {{ result.reasons_ineligible }}
+	{% if not result.is_eligible %}
+		Not Eligible: {{ result.loss_reason }}
     {% elif result.consent %}
     	 <a class="btn btn-success btn-sm" type="button"   
        	href="/subject/dashboard/{{result.consent.subject_identifier}}/">
@@ -24,7 +24,7 @@
          <a title="Consent to participate"
             class="btn btn-warning btn-sm"
                 href="{{ result.consent.href }}">
-             Consent (v{{ subject_screening.consent.version }})
+             Consent (v{{ subject_eligibility.consent.version }})
          </a>
     {% endif %}
 </td>

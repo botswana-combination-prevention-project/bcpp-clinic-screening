@@ -27,18 +27,18 @@ class ConsentMixin:
         """
         consent_model_wrapper_class = SubjectConsentModelWrapper
         try:
-            consent = self.object.subjectconsent_set.get(
+            consent = self.consent_object.model.objects.get(
                 version=self.consent_object.version)
         except ObjectDoesNotExist:
             consent = self.consent_object.model(
                 subject_identifier=self.object.subject_identifier,
                 consent_identifier=get_uuid(),
-                subject_screening=self.object,
+                eligibility_identifier=self.object.eligibility_identifier,
                 version=self.consent_object.version)
         return consent_model_wrapper_class(consent)
 
 
-class SubjectScreeningModelWrapper(ConsentMixin, ModelWrapper):
+class SubjectEligibilityModelWrapper(ConsentMixin, ModelWrapper):
 
     model = 'bcpp_clinic_screening.subjecteligibility'
     next_url_name = django_apps.get_app_config(

@@ -9,15 +9,16 @@ from django_crypto_fields.fields.firstname_field import FirstnameField
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future, dob_not_future
-from edc_base.utils import get_utcnow
+from edc_base.utils import get_utcnow, age
 from edc_consent.field_mixins.bw import IdentityFieldsMixin
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
-from edc_constants.constants import NOT_APPLICABLE, UUID_PATTERN
+from edc_constants.constants import NOT_APPLICABLE, UUID_PATTERN, NO, YES
 from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
+from ..utils import is_minor
 
 
 class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
@@ -209,6 +210,28 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
     def save(self, *args, **kwargs):
         if not self.id:
             self.eligibility_identifier = EligibilityIdentifier().identifier
+        self.age_in_years = age(self.dob, self.report_datetime).years
+        loss_reason = []
+        if self.has_identity == NO:
+            loss_reason.append('No valid identity.')
+        if self.part_time_resident == NO:
+            loss_reason.append(
+                'Does not spend 3 or more nights per month in the community.')
+        if self.citizen == NO and self.legal_marriage == NO:
+            loss_reason.append('Not a citizen and not married to a citizen.')
+            self.non_citizen = True
+        if (self.citizen == NO and self.legal_marriage == YES and
+                self.marriage_certificate == NO):
+            loss_reason.append(
+                'Not a citizen, married to a citizen but does not '
+                'have a marriage certificate.')
+            self.non_citizen = True
+        if self.literacy == NO:
+            loss_reason.append('Illiterate with no literate witness.')
+        if is_minor(self.age_in_years) and self.guardian != YES:
+            loss_reason.append('Minor without guardian available.')
+        self.is_eligible = False if loss_reason else True
+        self.loss_reason = '|'.join(loss_reason) if loss_reason else None
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -10,13 +10,13 @@ from edc_dashboard.view_mixins import AppConfigViewMixin
 from edc_dashboard.views import ListboardView
 
 from ..models import SubjectEligibility
-from .wrappers import SubjectScreeningModelWrapper
+from .wrappers import SubjectEligibilityModelWrapper
 
 
 class ListBoardView(AppConfigViewMixin, EdcBaseViewMixin, ListboardView):
 
     model = SubjectEligibility
-    model_wrapper_class = SubjectScreeningModelWrapper
+    model_wrapper_class = SubjectEligibilityModelWrapper
     listboard_url_name = django_apps.get_app_config(
         'bcpp_clinic_screening').listboard_url_name
     paginate_by = 10
