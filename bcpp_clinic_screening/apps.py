@@ -8,7 +8,7 @@ class AppConfig(DjangoApponfig):
     base_template_name = 'edc_base/base.html'
     listboard_url_name = 'bcpp_clinic_screening:listboard_url'
     dashboard_url_name = 'bcpp_clinic_screening:dashboard_url'
-    admin_site_name = 'clinic_screening_admin'
+    admin_site_name = 'bcpp_clinic_screening_admin'
     eligibility_age_adult_lower = 18
     eligibility_age_adult_upper = 64
     eligibility_age_minor_lower = 16
