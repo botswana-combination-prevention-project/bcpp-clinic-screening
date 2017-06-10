@@ -13,7 +13,7 @@ from .constants import ABLE_TO_PARTICIPATE
 
 fake = Faker()
 
-cliniceligibility = Recipe(
+subjectceligibility = Recipe(
     SubjectEligibility,
     report_datetime=get_utcnow,
     dob=(get_utcnow() - relativedelta(years=25)).date(),

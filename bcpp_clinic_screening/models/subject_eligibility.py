@@ -42,6 +42,13 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
+    eligibility_identifier = models.CharField(
+        verbose_name='Eligibility Identifier',
+        max_length=50,
+        blank=True,
+        unique=True,
+        editable=False)
+
     report_datetime = models.DateTimeField(
         verbose_name='Report date',
         default=get_utcnow,
@@ -152,7 +159,7 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
         help_text='If not HIV(+) participant is not elgiible.'
     )
 
-    age_in_years = models.IntegerField(editable=False)
+    age_in_years = models.IntegerField(editable=False, null=True, blank=True)
 
     is_eligible = models.BooleanField(
         default=False,
@@ -192,13 +199,6 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
                    'Always null for non-clinic members.'),
     )
 
-    eligibility_identifier = models.CharField(
-        verbose_name='Eligibility Identifier',
-        max_length=50,
-        blank=True,
-        unique=True,
-        editable=False)
-
     objects = EligibilityManager()
 
     history = HistoricalRecords()
@@ -208,7 +208,7 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.screening_identifier = EligibilityIdentifier().identifier
+            self.eligibility_identifier = EligibilityIdentifier().identifier
         super().save(*args, **kwargs)
 
     def __str__(self):

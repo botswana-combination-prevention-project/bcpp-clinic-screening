@@ -19,3 +19,5 @@ db.sqlite3
 build
 *.egg-info
 __pycache__
+*migrations
+.settings/org.eclipse.core.resources.prefs

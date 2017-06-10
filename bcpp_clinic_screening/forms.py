@@ -36,9 +36,6 @@ class SubjectEligibilityForm(SubjectModelFormMixin):
                 self._meta.model.check_for_known_identity(
                     cleaned_data.get('identity'), forms.ValidationError)
 
-        self._meta.model.check_for_consent(
-            cleaned_data.get('identity'), forms.ValidationError)
-
         return cleaned_data
 
     class Meta:
