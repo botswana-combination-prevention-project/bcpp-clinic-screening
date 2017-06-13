@@ -1,5 +1,3 @@
-import re
-
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
 
@@ -10,41 +8,31 @@ from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future, dob_not_future
 from edc_base.utils import get_utcnow, age
-from edc_consent.field_mixins.bw import IdentityFieldsMixin
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
-from edc_constants.constants import NOT_APPLICABLE, UUID_PATTERN
-from edc_identifier.model_mixins import NonUniqueSubjectIdentifierModelMixin
+from edc_constants.constants import NOT_APPLICABLE
+from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
+from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
 
 
-class SubjectIdentifierModelMixin(NonUniqueSubjectIdentifierModelMixin, models.Model):
-
-    def update_subject_identifier_on_save(self):
-        """Overridden to not set the subject identifier on save.
-        """
-        if not self.subject_identifier:
-            self.subject_identifier = self.subject_identifier_as_pk.hex
-        elif re.match(UUID_PATTERN, self.subject_identifier):
-            pass
-        return self.subject_identifier
-
-    def make_new_identifier(self):
-        return self.subject_identifier_as_pk.hex
-
-    class Meta:
-        abstract = True
-
-
-class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, BaseUuidModel):
+class SubjectEligibility (EligibilityIdentifierModelMixin,
+                          UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
     eligibility_identifier = models.CharField(
         verbose_name='Eligibility Identifier',
+        max_length=50,
+        blank=True,
+        unique=True,
+        editable=False)
+
+    registration_identifier = models.CharField(
+        verbose_name='Registration Identifier',
         max_length=50,
         blank=True,
         unique=True,
@@ -210,15 +198,16 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
     def save(self, *args, **kwargs):
         if not self.id:
             self.eligibility_identifier = EligibilityIdentifier().identifier
+            self.update_subject_identifier_on_save()
         self.age_in_years = age(self.dob, self.report_datetime).years
         eligibility = Eligibility(
             age=self.age_in_years, literate=self.literacy,
             guardian=self.guardian, legal_marriage=self.legal_marriage,
             marriage_certificate=self.marriage_certificate,
-            citizen=self.citizen, has_identity=self.has_identity,
-            identity=self.identity)
+            citizen=self.citizen)
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
+        self.registration_identifier = self.eligibility_identifier
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -228,4 +217,4 @@ class SubjectEligibility (SubjectIdentifierModelMixin, IdentityFieldsMixin, Base
         app_label = 'bcpp_clinic_screening'
         verbose_name_plural = "Subject Eligibility"
         unique_together = [
-            'first_name', 'initials', 'identity', 'additional_key']
+            'first_name', 'initials', 'additional_key']

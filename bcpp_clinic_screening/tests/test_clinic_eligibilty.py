@@ -5,7 +5,7 @@ from django.test import tag
 
 from edc_constants.constants import YES, NO
 
-from ..eligibility import AgeEvaluator, IdentityEvaluator, CitizenshipEvaluator
+from ..eligibility import AgeEvaluator, CitizenshipEvaluator
 from ..eligibility import LiteracyEvaluator, Eligibility
 
 
@@ -36,15 +36,6 @@ class TestClinicEligibility(unittest.TestCase):
         self.assertIn('age<18', age_evaluator.reason)
         age_evaluator = AgeEvaluator(age=100)
         self.assertIn('age>64', age_evaluator.reason)
-
-    def test_eligibility_has_no_identity(self):
-        identity_evaluator = IdentityEvaluator(has_identity=NO, identity=None)
-        self.assertFalse(identity_evaluator.eligible)
-
-    def test_eligibility_has_identity(self):
-        identity_evaluator = IdentityEvaluator(
-            has_identity=YES, identity='317918511')
-        self.assertTrue(identity_evaluator.eligible)
 
     def test_eligibility_citizen(self):
         """Assert not a citizen, not legally married to a citizen, is not eligible.
@@ -105,9 +96,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertTrue(obj.eligible)
 
     def test_eligibility_reason(self):
@@ -119,9 +108,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -134,9 +121,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -149,9 +134,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=YES,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -165,9 +148,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=YES,
             legal_marriage=YES,
             marriage_certificate=YES,
-            citizen=NO,
-            has_identity=YES,
-            identity='317918511')
+            citizen=NO)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -180,9 +161,7 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertFalse(obj.eligible)
         self.assertIn('age<18', obj.reasons[0])
 
@@ -194,8 +173,6 @@ class TestClinicEligibility(unittest.TestCase):
             literate=NO,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES,
-            has_identity=YES,
-            identity='317918511')
+            citizen=YES)
         self.assertFalse(obj.eligible)
         self.assertIn('Illiterate', obj.reasons[0])

@@ -25,17 +25,6 @@ class AgeEvaluator:
                 self.reason = f'age>{self.adult_upper}'
 
 
-class IdentityEvaluator:
-
-    def __init__(self, has_identity=None, identity=None):
-        self.eligible = None
-        self.reason = None
-        if has_identity == YES and identity:
-            self.eligible = True
-        if not self.eligible and has_identity == NO:
-            self.reason = 'No valid identity.'
-
-
 class CitizenshipEvaluator:
 
     def __init__(self, citizen=None, legal_marriage=None,
@@ -72,22 +61,18 @@ class LiteracyEvaluator:
 class Eligibility:
 
     def __init__(self, age=None, literate=None, guardian=None, legal_marriage=None,
-                 marriage_certificate=None, citizen=None, has_identity=None,
-                 identity=None):
+                 marriage_certificate=None, citizen=None):
 
         self.age_evaluator = AgeEvaluator(age=age)
 
         self.citizenship = CitizenshipEvaluator(
             citizen=citizen, legal_marriage=legal_marriage,
             marriage_certificate=marriage_certificate)
-        self.identity_evaluator = IdentityEvaluator(
-            has_identity=has_identity, identity=identity)
         self.literacy_evaluator = LiteracyEvaluator(
             literate=literate, guardian=guardian)
         self.criteria = dict(
             age=self.age_evaluator.eligible,
             citizen=self.citizenship.eligible,
-            has_identity=self.identity_evaluator.eligible,
             literate=self.literacy_evaluator.eligible)
         self.eligible = all(self.criteria.values())
 
@@ -99,9 +84,6 @@ class Eligibility:
         if self.citizenship.reason:
             reasons.pop(reasons.index('citizen'))
             reasons.append(self.citizenship.reason)
-        if self.identity_evaluator.reason:
-            reasons.pop(reasons.index('has_identity'))
-            reasons.append(self.identity_evaluator.reason)
         if self.literacy_evaluator.reason:
             reasons.pop(reasons.index('literate'))
             reasons.append(self.literacy_evaluator.reason)

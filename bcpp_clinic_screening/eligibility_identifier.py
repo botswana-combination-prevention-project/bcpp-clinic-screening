@@ -1,7 +1,7 @@
-from edc_identifier.simple_identifier import SimpleIdentifier
+from edc_identifier.simple_identifier import SimpleUniqueIdentifier
 
 
-class EligibilityIdentifier(SimpleIdentifier):
+class EligibilityIdentifier(SimpleUniqueIdentifier):
 
     random_string_length = 5
     identifier_type = 'eligibility_identifier'
