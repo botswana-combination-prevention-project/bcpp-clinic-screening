@@ -1,4 +1,3 @@
-from dateutil.relativedelta import relativedelta
 from faker import Faker
 from model_mommy.recipe import Recipe
 
@@ -16,7 +15,7 @@ fake = Faker()
 subjecteligibility = Recipe(
     SubjectEligibility,
     report_datetime=get_utcnow,
-    dob=(get_utcnow() - relativedelta(years=25)).date(),
+    age_in_years=27,
     part_time_resident=YES,
     initials='EW',
     gender=FEMALE,

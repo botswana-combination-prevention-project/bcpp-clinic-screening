@@ -6,8 +6,8 @@ from django_crypto_fields.fields.firstname_field import FirstnameField
 
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
-from edc_base.model_validators import datetime_not_future, dob_not_future
-from edc_base.utils import get_utcnow, age
+from edc_base.model_validators import datetime_not_future
+from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
 from edc_constants.constants import NOT_APPLICABLE
 from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
@@ -58,14 +58,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin,
             RegexValidator("^[A-Z]{1,3}$", "Must be Only CAPS and 2 or 3 letters. No spaces or numbers allowed.")],
         help_text="")
 
-    dob = models.DateField(
-        verbose_name="Date of birth",
-        validators=[dob_not_future, ],
-        null=True,
-        blank=True,
-        help_text="Format is YYYY-MM-DD.")
-
-    verbal_age = models.IntegerField(
+    age_in_years = models.IntegerField(
         verbose_name='Age in years as reported by patient',
         null=True,
         blank=True,
@@ -148,8 +141,6 @@ class SubjectEligibility (EligibilityIdentifierModelMixin,
         help_text='If not HIV(+) participant is not elgiible.'
     )
 
-    age_in_years = models.IntegerField(editable=False, null=True, blank=True)
-
     is_eligible = models.BooleanField(
         default=False,
         editable=False)
@@ -199,7 +190,6 @@ class SubjectEligibility (EligibilityIdentifierModelMixin,
         if not self.id:
             self.eligibility_identifier = EligibilityIdentifier().identifier
             self.update_subject_identifier_on_save()
-        self.age_in_years = age(self.dob, self.report_datetime).years
         eligibility = Eligibility(
             age=self.age_in_years, literate=self.literacy,
             guardian=self.guardian, legal_marriage=self.legal_marriage,
