@@ -1,5 +1,7 @@
+from django.core.exceptions import ImproperlyConfigured
+from django.core.validators import (
+    MinLengthValidator, MaxLengthValidator, RegexValidator)
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
 
 
 from django_crypto_fields.fields.firstname_field import FirstnameField
@@ -10,13 +12,38 @@ from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
 from edc_constants.constants import NOT_APPLICABLE
-from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
+from edc_registration.model_mixins import (
+    UpdatesOrCreatesRegistrationModelMixin as BaseUpdatesOrCreatesRegistrationModelMixin)
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
 from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
+
+
+class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
+
+    @property
+    def registration_unique_field(self):
+        return 'registration_identifier'
+
+    def registration_raise_on_not_unique(self):
+        """Asserts the field specified for update_or_create is unique.
+        """
+        unique_fields = ['registration_identifier']
+        for f in self.registration_model._meta.get_fields():
+            try:
+                if f.unique:
+                    unique_fields.append(f.name)
+            except AttributeError:
+                pass
+        if self.registration_unique_field not in unique_fields:
+            raise ImproperlyConfigured('Field is not unique. Got {}.{} -- {}'.format(
+                self._meta.label_lower, self.registration_unique_field))
+
+    class Meta:
+        abstract = True
 
 
 class SubjectEligibility (EligibilityIdentifierModelMixin,
@@ -202,6 +229,20 @@ class SubjectEligibility (EligibilityIdentifierModelMixin,
 
     def __str__(self):
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
+
+    def registration_raise_on_not_unique(self):
+        """Asserts the field specified for update_or_create is unique.
+        """
+        unique_fields = ['registration_identifier']
+        for f in self.registration_model._meta.get_fields():
+            try:
+                if f.unique:
+                    unique_fields.append(f.name)
+            except AttributeError:
+                pass
+        if self.registration_unique_field not in unique_fields:
+            raise ImproperlyConfigured('Field is not unique. Got {}.{} -- {}'.format(
+                self._meta.label_lower, self.registration_unique_field))
 
     class Meta:
         app_label = 'bcpp_clinic_screening'
