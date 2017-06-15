@@ -20,6 +20,7 @@ from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
 from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
+from bcpp_clinic_screening.models.model_mixins import SearchSlugModelMixin
 
 
 class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
@@ -46,7 +47,7 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
         abstract = True
 
 
-class SubjectEligibility (EligibilityIdentifierModelMixin,
+class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
                           UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
