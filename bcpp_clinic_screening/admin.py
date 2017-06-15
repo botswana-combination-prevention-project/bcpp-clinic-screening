@@ -10,6 +10,7 @@ from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 from .admin_site import bcpp_clinic_screening_admin
 from .forms import SubjectEligibilityForm, EnrollmentLossForm
 from .models import EnrollmentLoss, SubjectEligibility
+from edc_base.modeladmin_mixins import audit_fieldset_tuple
 
 
 class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
@@ -30,22 +31,24 @@ class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.M
     instructions = ['This form is a tool to assist the Interviewer to confirm the '
                     'Eligibility status of the subject. After entering the required items, click SAVE.']
 
-    fields = (
-        'report_datetime',
-        'first_name',
-        'initials',
-        'gender',
-        'age_in_years',
-        'has_identity',
-        "citizen",
-        "legal_marriage",
-        "marriage_certificate",
-        "part_time_resident",
-        "literacy",
-        "guardian",
-        'inability_to_participate',
-        "hiv_status",
-    )
+    fieldsets = (
+        (None, {
+            'fields': (
+                'report_datetime',
+                'first_name',
+                'initials',
+                'gender',
+                'age_in_years',
+                'has_identity',
+                "citizen",
+                "legal_marriage",
+                "marriage_certificate",
+                "part_time_resident",
+                "literacy",
+                "guardian",
+                'inability_to_participate',
+                "hiv_status",)}),
+        audit_fieldset_tuple)
 
     list_display = (
         'report_datetime', 'gender', 'is_eligible', 'is_consented', 'is_refused')
@@ -77,7 +80,13 @@ class ClinicEnrollmentLossAdmin(ModelAdminMixin, admin.ModelAdmin):
 
     form = EnrollmentLossForm
 
-    fields = ('clinic_eligibility', 'report_datetime', 'reason')
+    fieldsets = (
+        (None, {
+            'fields': (
+                'subject_eligibility',
+                'report_datetime',
+                'reason')}),
+        audit_fieldset_tuple)
 
     list_display = (
         'report_datetime', 'reason', 'user_created',
