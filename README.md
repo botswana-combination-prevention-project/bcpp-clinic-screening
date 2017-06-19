@@ -1,1 +1,2 @@
-# clinic-screening
+# bcpp-clinic-screening
+[![Build Status](https://travis-ci.org/botswana-harvard/bcpp-clinic-screening.svg?branch=develop)](https://travis-ci.org/botswana-harvard/bcpp-clinic-screening) [![Coverage Status](https://coveralls.io/repos/github/botswana-harvard/bcpp-clinic-screening/badge.svg?branch=develop)](https://coveralls.io/github/botswana-harvard/bcpp-clinic-screening?branch=develop)
