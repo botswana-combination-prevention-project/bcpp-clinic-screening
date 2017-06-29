@@ -29,6 +29,20 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
     def registration_unique_field(self):
         return 'registration_identifier'
 
+    @property
+    def registration_options(self):
+        """Gathers values for common attributes between the
+        registration model and this instance.
+        """
+        registration_options = {}
+        for field in self.registration_model._meta.get_fields():
+            try:
+                registration_options.update({field.name: getattr(
+                    self, field.name)})
+            except AttributeError:
+                pass
+        return registration_options
+
     def registration_raise_on_not_unique(self):
         """Asserts the field specified for update_or_create is unique.
         """
@@ -52,7 +66,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
-    eligibility_identifier = models.CharField(
+    screening_identifier = models.CharField(
         verbose_name='Eligibility Identifier',
         max_length=50,
         blank=True,
