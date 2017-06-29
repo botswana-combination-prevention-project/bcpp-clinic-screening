@@ -30,12 +30,12 @@ class ConsentMixin:
 #         try:
 #             consent = self.consent_object.model.objects.get(
 #                 version=self.consent_object.version,
-#                 eligibility_identifier=self.object.eligibility_identifier)
+#                 screening_identifier=self.object.screening_identifier)
 #         except ObjectDoesNotExist:
 #             consent = self.consent_object.model(
 #                 subject_identifier=self.object.subject_identifier,
 #                 consent_identifier=get_uuid(),
-#                 eligibility_identifier=self.object.eligibility_identifier,
+#                 screening_identifier=self.object.screening_identifier,
 #                 version=self.consent_object.version)
 #         return consent_model_wrapper_class(consent)
 
@@ -45,5 +45,5 @@ class SubjectEligibilityModelWrapper(ConsentMixin, ModelWrapper):
     model = 'bcpp_clinic_screening.subjecteligibility'
     next_url_name = django_apps.get_app_config(
         'bcpp_clinic_screening').listboard_url_name
-    next_url_attrs = ['eligibility_identifier']
+    next_url_attrs = ['screening_identifier']
     querystring_attrs = ['gender']

@@ -1,5 +1,8 @@
 from django.test import TestCase, tag
 
+from bcpp_clinic_screening.constants import ABLE_TO_PARTICIPATE
+from edc_base.utils import get_utcnow
+from edc_constants.constants import YES, FEMALE, POS, NOT_APPLICABLE, NEG
 from edc_registration.models import RegisteredSubject
 
 from ..models import SubjectEligibility
@@ -26,8 +29,7 @@ class TestCreateClinicEligibility(TestCase):
     def test_create_registered_subject_2(self):
         """Test created registered subject matches the the subject eligibility.
         """
-        self.screening_test_helper.make_eligibility()
-        subject_eligibility = SubjectEligibility.objects.first()
+        subject_eligibility = self.screening_test_helper.make_eligibility()
         registered_subject = RegisteredSubject.objects.first()
         self.assertEqual(
             registered_subject.registration_identifier,
@@ -38,3 +40,43 @@ class TestCreateClinicEligibility(TestCase):
         self.assertEqual(
             registered_subject.screening_identifier,
             subject_eligibility.screening_identifier)
+
+    def test_is_eligible_true(self):
+        """Test subject eligibility is_eligible is True.
+        """
+        options = dict(
+            report_datetime=get_utcnow(),
+            age_in_years=27,
+            part_time_resident=YES,
+            first_name='TEST',
+            initials='TT',
+            gender=FEMALE,
+            has_identity=YES,
+            hiv_status=POS,
+            inability_to_participate=ABLE_TO_PARTICIPATE,
+            citizen=YES,
+            literacy=YES,
+            guardian=NOT_APPLICABLE)
+        subject_eligibility = self.screening_test_helper.make_eligibility(
+            options=options)
+        self.assertTrue(subject_eligibility.is_eligible)
+
+    def test_is_eligible_false(self):
+        """Test subject eligibility is_eligible is False.
+        """
+        options = dict(
+            report_datetime=get_utcnow(),
+            age_in_years=27,
+            part_time_resident=YES,
+            first_name='TEST',
+            initials='TT',
+            gender=FEMALE,
+            has_identity=YES,
+            hiv_status=NEG,
+            inability_to_participate=ABLE_TO_PARTICIPATE,
+            citizen=YES,
+            literacy=YES,
+            guardian=NOT_APPLICABLE)
+        subject_eligibility = self.screening_test_helper.make_eligibility(
+            options=options)
+        self.assertFalse(subject_eligibility.is_eligible)

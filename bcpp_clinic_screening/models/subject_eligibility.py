@@ -19,7 +19,7 @@ from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
 from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
-from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
+from .screening_identifier_model_mixin import ScreeningIdentifierModelMixin
 from bcpp_clinic_screening.models.model_mixins import SearchSlugModelMixin
 
 
@@ -61,7 +61,7 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
         abstract = True
 
 
-class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
+class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
                           UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
@@ -236,7 +236,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
             age=self.age_in_years, literate=self.literacy,
             guardian=self.guardian, legal_marriage=self.legal_marriage,
             marriage_certificate=self.marriage_certificate,
-            citizen=self.citizen)
+            citizen=self.citizen, hiv_status=self.hiv_status)
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
         self.registration_identifier = self.screening_identifier

@@ -5,7 +5,7 @@ from .views import ListBoardView
 from django.contrib import admin
 
 app_name = 'bcpp_clinic_screening'
-eligibility_identifier = 'S[0-9A-Z]{7}'
+screening_identifier = 'S[0-9A-Z]{7}'
 
 admin.autodiscover()
 
@@ -18,11 +18,11 @@ def listboard_urls():
     for listboard_url_name, listboard_view_class, label in listboard_configs:
         urlpatterns.extend([
             url(r'^' + label + '/'
-                '(?P<eligibility_identifier>' + eligibility_identifier + ')/'
+                '(?P<screening_identifier>' + screening_identifier + ')/'
                 '(?P<page>\d+)/',
                 listboard_view_class.as_view(), name=listboard_url_name),
             url(r'^' + label + '/'
-                '(?P<eligibility_identifier>' + eligibility_identifier + ')/',
+                '(?P<screening_identifier>' + screening_identifier + ')/',
                 listboard_view_class.as_view(), name=listboard_url_name),
             url(r'^' + label + '/(?P<page>\d+)/',
                 listboard_view_class.as_view(), name=listboard_url_name),

@@ -49,7 +49,7 @@ class HivStatusEvaluator:
     def __init__(self, hiv_status=None):
         self.eligible = None
         self.reason = None
-        if (hiv_status == POS):
+        if hiv_status == POS:
             self.eligible = True
         else:
             self.eligible = False
