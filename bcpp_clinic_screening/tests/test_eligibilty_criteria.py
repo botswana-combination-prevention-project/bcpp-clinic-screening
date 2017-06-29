@@ -3,10 +3,11 @@ import unittest
 from django.apps import apps as django_apps
 from django.test import tag
 
-from edc_constants.constants import YES, NO
+from edc_constants.constants import YES, NO, POS, NEG, IND, UNK
 
 from ..eligibility import AgeEvaluator, CitizenshipEvaluator
 from ..eligibility import LiteracyEvaluator, Eligibility
+from bcpp_clinic_screening.eligibility import HivStatusEvaluator
 
 
 @tag('eligibility')
@@ -87,6 +88,18 @@ class TestClinicEligibility(unittest.TestCase):
             literate=NO, guardian=YES)
         self.assertTrue(literacy_evaluator.eligible)
 
+    def test_hiv_status_evaluator(self):
+        """ Assert hiv status POS is eligible.
+        """
+        hiv_status_evaluator = HivStatusEvaluator(hiv_status=POS)
+        self.assertTrue(hiv_status_evaluator.eligible)
+
+    def test_hiv_status_evaluator2(self):
+        """ Assert hiv status POS is eligible.
+        """
+        hiv_status_evaluator = HivStatusEvaluator(hiv_status=NEG)
+        self.assertFalse(hiv_status_evaluator.eligible)
+
     def test_eligibility(self):
         """ Assert within age range and literate is eligible.
         """
@@ -96,7 +109,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertTrue(obj.eligible)
 
     def test_eligibility_reason(self):
@@ -108,7 +122,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -121,7 +136,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -134,7 +150,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=YES,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -148,7 +165,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=YES,
             legal_marriage=YES,
             marriage_certificate=YES,
-            citizen=NO)
+            citizen=NO,
+            hiv_status=POS)
         self.assertTrue(obj.eligible)
         self.assertEqual(obj.reasons, [])
 
@@ -161,7 +179,8 @@ class TestClinicEligibility(unittest.TestCase):
             guardian=None,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertFalse(obj.eligible)
         self.assertIn('age<18', obj.reasons[0])
 
@@ -173,6 +192,37 @@ class TestClinicEligibility(unittest.TestCase):
             literate=NO,
             legal_marriage=NO,
             marriage_certificate=NO,
-            citizen=YES)
+            citizen=YES,
+            hiv_status=POS)
         self.assertFalse(obj.eligible)
         self.assertIn('Illiterate', obj.reasons[0])
+
+    def test_eligibility_hiv_status(self):
+        """ Assert hiv status POS is eligible.
+        """
+        obj = Eligibility(
+            age=64,
+            literate=NO,
+            guardian=YES,
+            legal_marriage=NO,
+            marriage_certificate=NO,
+            citizen=YES,
+            hiv_status=POS)
+        self.assertTrue(obj.eligible)
+        self.assertEqual(obj.reasons, [])
+
+    def test_eligibility_hiv_status2(self):
+        """ Assert hiv status not POS is not eligible.
+        """
+        hiv_status_values = [NEG, IND, UNK, 'not_answering']
+        for hiv_status in hiv_status_values:
+            obj = Eligibility(
+                age=64,
+                literate=NO,
+                guardian=YES,
+                legal_marriage=NO,
+                marriage_certificate=NO,
+                citizen=YES,
+                hiv_status=hiv_status)
+            self.assertFalse(obj.eligible)
+        self.assertIn('Not a positive participant', obj.reasons[0])

@@ -226,11 +226,11 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
     history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.eligibility_identifier,)
+        return (self.screening_identifier,)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.eligibility_identifier = EligibilityIdentifier().identifier
+            self.screening_identifier = EligibilityIdentifier().identifier
             self.update_subject_identifier_on_save()
         eligibility = Eligibility(
             age=self.age_in_years, literate=self.literacy,
@@ -239,7 +239,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
             citizen=self.citizen)
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
-        self.registration_identifier = self.eligibility_identifier
+        self.registration_identifier = self.screening_identifier
         super().save(*args, **kwargs)
 
     def __str__(self):

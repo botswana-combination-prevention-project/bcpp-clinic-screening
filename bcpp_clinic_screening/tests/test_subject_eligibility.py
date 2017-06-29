@@ -22,3 +22,19 @@ class TestCreateClinicEligibility(TestCase):
         """
         self.screening_test_helper.make_eligibility()
         self.assertEqual(RegisteredSubject.objects.all().count(), 1)
+
+    def test_create_registered_subject_2(self):
+        """Test created registered subject matches the the subject eligibility.
+        """
+        self.screening_test_helper.make_eligibility()
+        subject_eligibility = SubjectEligibility.objects.first()
+        registered_subject = RegisteredSubject.objects.first()
+        self.assertEqual(
+            registered_subject.registration_identifier,
+            subject_eligibility.screening_identifier)
+        self.assertEqual(
+            registered_subject.registration_identifier,
+            subject_eligibility.registration_identifier)
+        self.assertEqual(
+            registered_subject.screening_identifier,
+            subject_eligibility.screening_identifier)

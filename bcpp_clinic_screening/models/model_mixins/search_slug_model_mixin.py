@@ -5,7 +5,7 @@ class SearchSlugModelMixin(Base):
 
     def get_search_slug_fields(self):
         fields = super().get_search_slug_fields()
-        fields.append('eligibility_identifier')
+        fields.append('screening_identifier')
         return fields
 
     class Meta:

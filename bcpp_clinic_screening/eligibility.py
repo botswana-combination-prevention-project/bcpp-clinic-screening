@@ -1,6 +1,6 @@
 from django.apps import apps as django_apps
 
-from edc_constants.constants import YES, NO
+from edc_constants.constants import YES, NO, POS
 
 
 class AgeEvaluator:
@@ -44,6 +44,18 @@ class CitizenshipEvaluator:
                 self.reason = 'Not a citizen and not married to a citizen..'
 
 
+class HivStatusEvaluator:
+
+    def __init__(self, hiv_status=None):
+        self.eligible = None
+        self.reason = None
+        if (hiv_status == POS):
+            self.eligible = True
+        else:
+            self.eligible = False
+            self.reason = 'Not a positive participant.'
+
+
 class LiteracyEvaluator:
 
     def __init__(self, literate=None, guardian=None):
@@ -61,10 +73,10 @@ class LiteracyEvaluator:
 class Eligibility:
 
     def __init__(self, age=None, literate=None, guardian=None, legal_marriage=None,
-                 marriage_certificate=None, citizen=None):
+                 marriage_certificate=None, citizen=None, hiv_status=None):
 
         self.age_evaluator = AgeEvaluator(age=age)
-
+        self.hiv_status_evaluator = HivStatusEvaluator(hiv_status=hiv_status)
         self.citizenship = CitizenshipEvaluator(
             citizen=citizen, legal_marriage=legal_marriage,
             marriage_certificate=marriage_certificate)
@@ -73,7 +85,8 @@ class Eligibility:
         self.criteria = dict(
             age=self.age_evaluator.eligible,
             citizen=self.citizenship.eligible,
-            literate=self.literacy_evaluator.eligible)
+            literate=self.literacy_evaluator.eligible,
+            hiv_status=self.hiv_status_evaluator.eligible)
         self.eligible = all(self.criteria.values())
 
     @property
@@ -90,4 +103,7 @@ class Eligibility:
         if self.age_evaluator.reason:
             reasons.pop(reasons.index('age'))
             reasons.append(self.age_evaluator.reason)
+        if self.hiv_status_evaluator.reason:
+            reasons.pop(reasons.index('hiv_status'))
+            reasons.append(self.hiv_status_evaluator.reason)
         return reasons
