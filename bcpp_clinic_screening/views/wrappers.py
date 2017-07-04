@@ -23,7 +23,7 @@ class ConsentMixin:
     def consent(self):
         """Returns a wrapped saved or unsaved consent.
         """
-        from bcpp_clinic_subject.views import SubjectConsentModelWrapper
+        from bcpp_clinic_subject.model_wrappers import SubjectConsentModelWrapper
         consent_model_wrapper_class = SubjectConsentModelWrapper
         try:
             consent = self.consent_object.model.objects.get(
