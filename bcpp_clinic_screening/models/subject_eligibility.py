@@ -12,15 +12,16 @@ from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
 from edc_constants.constants import NOT_APPLICABLE
+from edc_base.model_mixins.constants import DEFAULT_BASE_FIELDS
 from edc_registration.model_mixins import (
     UpdatesOrCreatesRegistrationModelMixin as BaseUpdatesOrCreatesRegistrationModelMixin)
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
-from ..managers import EligibilityManager
-from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
+from ..eligibility_identifier import EligibilityIdentifier
+from ..managers import EligibilityManager
+from ..models.model_mixins import SearchSlugModelMixin
 from .screening_identifier_model_mixin import ScreeningIdentifierModelMixin
-from bcpp_clinic_screening.models.model_mixins import SearchSlugModelMixin
 
 
 class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
@@ -36,11 +37,12 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
         """
         registration_options = {}
         for field in self.registration_model._meta.get_fields():
-            try:
-                registration_options.update({field.name: getattr(
-                    self, field.name)})
-            except AttributeError:
-                pass
+            if field.name not in DEFAULT_BASE_FIELDS + ['_state'] + [self.registration_unique_field]:
+                try:
+                    registration_options.update({field.name: getattr(
+                        self, field.name)})
+                except AttributeError:
+                    pass
         return registration_options
 
     def registration_raise_on_not_unique(self):
