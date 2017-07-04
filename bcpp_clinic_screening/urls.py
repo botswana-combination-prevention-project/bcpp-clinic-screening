@@ -30,5 +30,6 @@ def listboard_urls():
                 listboard_view_class.as_view(), name=listboard_url_name)])
     return urlpatterns
 
+
 urlpatterns = [
     url(r'^admin/', bcpp_clinic_screening_admin.urls)] + listboard_urls()
