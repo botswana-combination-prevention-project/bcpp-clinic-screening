@@ -8,12 +8,13 @@ from django.utils.decorators import method_decorator
 from edc_base.view_mixins import EdcBaseViewMixin
 from edc_dashboard.view_mixins import AppConfigViewMixin
 from edc_dashboard.views import ListboardView
+from bcpp_clinic_screening.view_mixins import MapAreaQuerysetViewMixin
 
 from ..models import SubjectEligibility
 from .wrappers import SubjectEligibilityModelWrapper
 
 
-class ListBoardView(AppConfigViewMixin, EdcBaseViewMixin, ListboardView):
+class ListBoardView(AppConfigViewMixin, EdcBaseViewMixin, MapAreaQuerysetViewMixin, ListboardView):
 
     model = SubjectEligibility
     model_wrapper_class = SubjectEligibilityModelWrapper

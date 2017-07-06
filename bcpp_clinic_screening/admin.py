@@ -51,10 +51,10 @@ class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.M
         audit_fieldset_tuple)
 
     list_display = (
-        'report_datetime', 'gender', 'is_eligible', 'is_consented', 'is_refused')
+        'report_datetime', 'gender', 'is_eligible', 'is_consented', 'is_refused', 'map_area')
 
     list_filter = ('gender', 'is_eligible', 'is_consented',
-                   'is_refused', 'report_datetime', 'community')
+                   'is_refused', 'report_datetime', 'map_area')
 
     radio_fields = {
         'has_identity': admin.VERTICAL,

@@ -212,8 +212,6 @@ class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
         help_text='filled from clinic_consent'
     )
 
-    community = models.CharField(max_length=25, editable=False)
-
     additional_key = models.CharField(
         max_length=36,
         verbose_name='-',
