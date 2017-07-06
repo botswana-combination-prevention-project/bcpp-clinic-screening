@@ -82,6 +82,7 @@ if 'test' in sys.argv:
         "edc_export": None,
         "edc_sync": None,
         "edc_metadata": None,
+        "edc_map": None,
         "edc_timepoint": None,
         "edc_sync_files": None,
         'edc_identifier': None,
