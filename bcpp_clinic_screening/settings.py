@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'edc_visit_schedule.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
+    'bcpp_clinic_screening.apps.EdcMapAppConfig',
     'bcpp_clinic_screening.apps.EdcTimepointAppConfig',
     'bcpp_clinic_screening.apps.EdcAppointmentAppConfig',
     'bcpp_clinic_screening.apps.EdcMetadataAppConfig',
@@ -179,6 +180,8 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, APP_NAME, 'static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, APP_NAME, 'media')
+
+CURRENT_MAP_AREA = 'eligibility_test_community'
 
 MEDIA_URL = '/media/'
 

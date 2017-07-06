@@ -14,6 +14,7 @@ from edc_constants.constants import FAILED_ELIGIBILITY
 from edc_device.apps import AppConfig as BaseEdcDeviceAppConfig
 from edc_device.constants import CENTRAL_SERVER
 from edc_identifier.apps import AppConfig as BaseEdcIdentifierAppConfig
+from edc_map.apps import AppConfig as BaseEdcMapAppConfig
 from edc_metadata.apps import AppConfig as BaseEdcMetadataAppConfig
 from edc_protocol.apps import AppConfig as BaseEdcProtocolAppConfig, SubjectType, Cap
 from edc_sync.apps import AppConfig as BaseEdcSyncAppConfig
@@ -45,6 +46,10 @@ class EdcDeviceAppConfig(BaseEdcDeviceAppConfig):
     use_settings = True
     device_id = settings.DEVICE_ID
     device_role = settings.DEVICE_ROLE
+
+
+class EdcMapAppConfig(BaseEdcMapAppConfig):
+    verbose_name = 'BCPP Mappers'
 
 
 class EdcProtocolAppConfig(BaseEdcProtocolAppConfig):

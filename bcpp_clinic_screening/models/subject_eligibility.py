@@ -13,6 +13,7 @@ from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
 from edc_constants.constants import NOT_APPLICABLE
 from edc_base.model_mixins.constants import DEFAULT_BASE_FIELDS
+from edc_map.model_mixins import MapperDataModelMixin
 from edc_registration.model_mixins import (
     UpdatesOrCreatesRegistrationModelMixin as BaseUpdatesOrCreatesRegistrationModelMixin)
 
@@ -22,6 +23,7 @@ from ..eligibility_identifier import EligibilityIdentifier
 from ..managers import EligibilityManager
 from ..models.model_mixins import SearchSlugModelMixin
 from .screening_identifier_model_mixin import ScreeningIdentifierModelMixin
+from edc_map.site_mappers import site_mappers
 
 
 class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
@@ -64,7 +66,7 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
 
 
 class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
-                          UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
+                          UpdatesOrCreatesRegistrationModelMixin, MapperDataModelMixin, BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
     information for potential participant."""
 
@@ -242,10 +244,18 @@ class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
         self.registration_identifier = self.screening_identifier
+        self.update_mapper_fields
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
+
+    @property
+    def update_mapper_fields(self):
+        mapper = site_mappers.registry.get(site_mappers.current_map_area)
+        self.map_area = site_mappers.current_map_area
+        self.center_lat = mapper.center_lat
+        self.center_lon = mapper.center_lon
 
     def registration_raise_on_not_unique(self):
         """Asserts the field specified for update_or_create is unique.
