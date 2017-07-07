@@ -59,6 +59,14 @@ class TestClinicEligibility(unittest.TestCase):
             citizen=NO, marriage_certificate=YES, legal_marriage=YES)
         self.assertTrue(citizenship_evaluator.eligible)
 
+    def test_eligibility_not_acitizen2(self):
+        """Assert not a citizen, legal married to a citizen and has marriage
+        certificate is eligible.
+        """
+        citizenship_evaluator = CitizenshipEvaluator(
+            citizen=NO, marriage_certificate=NO, legal_marriage=YES)
+        self.assertFalse(citizenship_evaluator.eligible)
+
     def test_eligibility_literacy(self):
         """Assert literate participant is eligible.
         """
