@@ -1,3 +1,0 @@
-
-class ElibilityError(Exception):
-    pass
