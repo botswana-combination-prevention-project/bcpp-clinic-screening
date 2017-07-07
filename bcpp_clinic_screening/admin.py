@@ -74,6 +74,9 @@ class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.M
         'initials',
     )
 
+    def get_readonly_fields(self, request, obj=None):
+        return (super().get_readonly_fields(request, obj=obj))
+
 
 @admin.register(EnrollmentLoss, site=bcpp_clinic_screening_admin)
 class ClinicEnrollmentLossAdmin(ModelAdminMixin, admin.ModelAdmin):
