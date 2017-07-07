@@ -12,10 +12,6 @@ class SubjectModelFormMixin(CommonCleanModelFormMixin, forms.ModelForm):
 
 class SubjectEligibilityForm(SubjectModelFormMixin):
 
-    def clean(self):
-        cleaned_data = super().clean()
-        return cleaned_data
-
     class Meta:
         model = SubjectEligibility
         fields = '__all__'
