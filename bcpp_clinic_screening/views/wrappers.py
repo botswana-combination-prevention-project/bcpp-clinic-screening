@@ -28,14 +28,17 @@ class ConsentMixin:
         try:
             consent = self.consent_object.model.objects.get(
                 version=self.consent_object.version,
-                screening_identifier=self.object.screening_identifier)
+                screening_identifier=self.object.screening_identifier,)
         except ObjectDoesNotExist:
             consent = self.consent_object.model(
                 subject_identifier=self.object.subject_identifier,
                 consent_identifier=get_uuid(),
                 screening_identifier=self.object.screening_identifier,
                 version=self.consent_object.version)
-        return consent_model_wrapper_class(consent)
+            consent = consent_model_wrapper_class(consent)
+        if consent:
+            consent = consent_model_wrapper_class(consent)
+        return consent
 
 
 class SubjectEligibilityModelWrapper(ConsentMixin, ModelWrapper):
