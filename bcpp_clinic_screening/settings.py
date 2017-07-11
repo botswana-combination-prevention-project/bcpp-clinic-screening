@@ -95,6 +95,7 @@ if 'test' in sys.argv:
         'edc_protocol': None,
         'edc_visit_schedule': None,
         'edc_registration': None,
+        'bcpp_clinic_screening': None,
         'admin': None,
         "auth": None,
         "edc_sync_files": None,

@@ -105,10 +105,7 @@ class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
         help_text="")
 
     age_in_years = models.IntegerField(
-        verbose_name='Age in years as reported by patient',
-        null=True,
-        blank=True,
-        help_text='Complete if DOB is not provided, otherwise leave BLANK.')
+        verbose_name='Age in years as reported by patient')
 
     guardian = models.CharField(
         verbose_name="If minor, is there a guardian available? ",
@@ -238,7 +235,8 @@ class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
             age=self.age_in_years, literate=self.literacy,
             guardian=self.guardian, legal_marriage=self.legal_marriage,
             marriage_certificate=self.marriage_certificate,
-            citizen=self.citizen, hiv_status=self.hiv_status)
+            citizen=self.citizen, hiv_status=self.hiv_status,
+            participation=self.inability_to_participate)
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
         self.registration_identifier = self.screening_identifier
