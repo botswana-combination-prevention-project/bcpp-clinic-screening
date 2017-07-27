@@ -10,7 +10,9 @@ from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
-from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
+from edc_constants.choices import (
+    YES_NO_UNKNOWN, GENDER_UNDETERMINED, YES_NO_NA, YES_NO)
+
 from edc_constants.constants import NOT_APPLICABLE
 from edc_base.model_mixins.constants import DEFAULT_BASE_FIELDS
 from edc_map.model_mixins import MapperDataModelMixin
@@ -117,7 +119,7 @@ class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
     gender = models.CharField(
         verbose_name='Gender',
         max_length=1,
-        choices=GENDER)
+        choices=GENDER_UNDETERMINED)
 
     has_identity = models.CharField(
         verbose_name="[Interviewer] Has the subject presented a valid OMANG or other identity document?",
