@@ -20,7 +20,7 @@ from ..managers import EligibilityManager
 from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
 from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
-from bcpp_clinic_screening.models.model_mixins import SearchSlugModelMixin
+from edc_search.model_mixins import SearchSlugModelMixin
 
 
 class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
@@ -245,6 +245,11 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
     def __str__(self):
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
 
+    def get_search_slug_fields(self):
+        fields = super().get_search_slug_fields()
+        fields.append('eligibility_identifier')
+        return fields
+
     def registration_raise_on_not_unique(self):
         """Asserts the field specified for update_or_create is unique.
         """
@@ -260,7 +265,6 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
                 self._meta.label_lower, self.registration_unique_field))
 
     class Meta:
-        app_label = 'bcpp_clinic_screening'
         verbose_name_plural = "Subject Eligibility"
         unique_together = [
             'first_name', 'initials', 'additional_key']
