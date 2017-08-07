@@ -3,15 +3,15 @@ from django.db import models
 
 class EligibilityManager(models.Manager):
 
-    def get_by_natural_key(self, eligibility_identifier):
+    def get_by_natural_key(self, screening_identifier):
         return self.get(
-            eligibility_identifier=eligibility_identifier
+            screening_identifier=screening_identifier
         )
 
 
 class EnrollmentLossManager(models.Manager):
 
-    def get_by_natural_key(self, eligibility_identifier):
+    def get_by_natural_key(self, screening_identifier):
         return self.get(
-            subject_eligibility__eligibility_identifier=eligibility_identifier
+            subject_eligibility__screening_identifier=screening_identifier
         )

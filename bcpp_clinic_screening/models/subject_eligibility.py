@@ -10,17 +10,22 @@ from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
-from edc_constants.choices import YES_NO_UNKNOWN, GENDER, YES_NO_NA, YES_NO
+from edc_constants.choices import (
+    YES_NO_UNKNOWN, GENDER_UNDETERMINED, YES_NO_NA, YES_NO)
+
 from edc_constants.constants import NOT_APPLICABLE
+from edc_base.model_mixins.constants import DEFAULT_BASE_FIELDS
+from edc_map.model_mixins import MapperDataModelMixin
+from edc_map.site_mappers import site_mappers
 from edc_registration.model_mixins import (
     UpdatesOrCreatesRegistrationModelMixin as BaseUpdatesOrCreatesRegistrationModelMixin)
+from edc_search.model_mixins import SearchSlugModelMixin
 
 from ..choices import VERBALHIVRESULT_CHOICE, INABILITY_TO_PARTICIPATE_REASON
-from ..managers import EligibilityManager
-from ..eligibility_identifier import EligibilityIdentifier
 from ..eligibility import Eligibility
-from .eligibility_identifier_model_mixin import EligibilityIdentifierModelMixin
-from edc_search.model_mixins import SearchSlugModelMixin
+from ..eligibility_identifier import EligibilityIdentifier
+from ..managers import EligibilityManager
+from .screening_identifier_model_mixin import ScreeningIdentifierModelMixin
 
 
 class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationModelMixin):
@@ -36,11 +41,12 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
         """
         registration_options = {}
         for field in self.registration_model._meta.get_fields():
-            try:
-                registration_options.update({field.name: getattr(
-                    self, field.name)})
-            except AttributeError:
-                pass
+            if field.name not in DEFAULT_BASE_FIELDS + ['_state'] + [self.registration_unique_field]:
+                try:
+                    registration_options.update({field.name: getattr(
+                        self, field.name)})
+                except AttributeError:
+                    pass
         return registration_options
 
     def registration_raise_on_not_unique(self):
@@ -61,10 +67,12 @@ class UpdatesOrCreatesRegistrationModelMixin(BaseUpdatesOrCreatesRegistrationMod
         abstract = True
 
 
-class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
-                          UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
+class SubjectEligibility (ScreeningIdentifierModelMixin, SearchSlugModelMixin,
+                          UpdatesOrCreatesRegistrationModelMixin, MapperDataModelMixin,
+                          BaseUuidModel):
     """A model completed by the user that confirms and saves eligibility
-    information for potential participant."""
+    information for potential participant.
+    """
 
     screening_identifier = models.CharField(
         verbose_name='Eligibility Identifier',
@@ -101,10 +109,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
         help_text="")
 
     age_in_years = models.IntegerField(
-        verbose_name='Age in years as reported by patient',
-        null=True,
-        blank=True,
-        help_text='Complete if DOB is not provided, otherwise leave BLANK.')
+        verbose_name='Age in years as reported by patient')
 
     guardian = models.CharField(
         verbose_name="If minor, is there a guardian available? ",
@@ -116,7 +121,7 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
     gender = models.CharField(
         verbose_name='Gender',
         max_length=1,
-        choices=GENDER)
+        choices=GENDER_UNDETERMINED)
 
     has_identity = models.CharField(
         verbose_name="[Interviewer] Has the subject presented a valid OMANG or other identity document?",
@@ -208,8 +213,6 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
         help_text='filled from clinic_consent'
     )
 
-    community = models.CharField(max_length=25, editable=False)
-
     additional_key = models.CharField(
         max_length=36,
         verbose_name='-',
@@ -226,29 +229,37 @@ class SubjectEligibility (EligibilityIdentifierModelMixin, SearchSlugModelMixin,
     history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.eligibility_identifier,)
+        return (self.screening_identifier,)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.eligibility_identifier = EligibilityIdentifier().identifier
+            self.screening_identifier = EligibilityIdentifier().identifier
             self.update_subject_identifier_on_save()
         eligibility = Eligibility(
             age=self.age_in_years, literate=self.literacy,
             guardian=self.guardian, legal_marriage=self.legal_marriage,
             marriage_certificate=self.marriage_certificate,
-            citizen=self.citizen)
+            citizen=self.citizen, hiv_status=self.hiv_status,
+            participation=self.inability_to_participate)
         self.is_eligible = eligibility.eligible
         self.loss_reason = eligibility.reasons
-        self.registration_identifier = self.eligibility_identifier
+        self.registration_identifier = self.screening_identifier
+        self.update_mapper_fields
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.first_name} ({self.initials}) {self.gender}/{self.age_in_years}'
 
     def get_search_slug_fields(self):
-        fields = super().get_search_slug_fields()
-        fields.append('eligibility_identifier')
+        fields = ['eligibility_identifier']
         return fields
+
+    @property
+    def update_mapper_fields(self):
+        mapper = site_mappers.registry.get(site_mappers.current_map_area)
+        self.map_area = site_mappers.current_map_area
+        self.center_lat = mapper.center_lat
+        self.center_lon = mapper.center_lon
 
     def registration_raise_on_not_unique(self):
         """Asserts the field specified for update_or_create is unique.

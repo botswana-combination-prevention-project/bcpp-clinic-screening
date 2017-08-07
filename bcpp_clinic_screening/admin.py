@@ -1,16 +1,16 @@
 from django.contrib import admin
 
 from edc_base.fieldsets import FieldsetsModelAdminMixin
+from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 from edc_base.modeladmin_mixins import (
     ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
     ModelAdminFormAutoNumberMixin, ModelAdminAuditFieldsMixin,
     ModelAdminReadOnlyMixin, ModelAdminInstitutionMixin)
-from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
+from edc_base.modeladmin_mixins import audit_fieldset_tuple
 
 from .admin_site import bcpp_clinic_screening_admin
 from .forms import SubjectEligibilityForm, EnrollmentLossForm
 from .models import EnrollmentLoss, SubjectEligibility
-from edc_base.modeladmin_mixins import audit_fieldset_tuple
 
 
 class ModelAdminMixin(ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
@@ -51,10 +51,10 @@ class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.M
         audit_fieldset_tuple)
 
     list_display = (
-        'report_datetime', 'gender', 'is_eligible', 'is_consented', 'is_refused')
+        'report_datetime', 'gender', 'is_eligible', 'is_consented', 'is_refused', 'map_area')
 
     list_filter = ('gender', 'is_eligible', 'is_consented',
-                   'is_refused', 'report_datetime', 'community')
+                   'is_refused', 'report_datetime', 'map_area')
 
     radio_fields = {
         'has_identity': admin.VERTICAL,
@@ -73,6 +73,9 @@ class SubjectEligibilityAdmin(ModelAdminMixin, FieldsetsModelAdminMixin, admin.M
         'first_name',
         'initials',
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        return (super().get_readonly_fields(request, obj=obj))
 
 
 @admin.register(EnrollmentLoss, site=bcpp_clinic_screening_admin)

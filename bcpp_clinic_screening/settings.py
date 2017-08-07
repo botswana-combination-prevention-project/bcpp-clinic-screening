@@ -61,30 +61,20 @@ INSTALLED_APPS = [
     'django_revision.apps.AppConfig',
     'edc_dashboard.apps.AppConfig',
     'edc_consent.apps.AppConfig',
-    'bcpp_clinic.apps.EdcTimepointAppConfig',
-    'bcpp_clinic.apps.EdcAppointmentAppConfig',
-    'bcpp_clinic.apps.EdcMetadataAppConfig',
-    #     'bcpp_clinic_subject.apps.AppConfig',
     'edc_registration.apps.AppConfig',
     'edc_identifier.apps.AppConfig',
     'edc_visit_schedule.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
+    'bcpp_clinic_screening.apps.EdcMapAppConfig',
+    'bcpp_clinic_screening.apps.EdcTimepointAppConfig',
+    'bcpp_clinic_screening.apps.EdcAppointmentAppConfig',
+    'bcpp_clinic_screening.apps.EdcMetadataAppConfig',
+    'bcpp_clinic_screening.apps.EdcSyncAppConfig',
+    'bcpp_clinic_screening.apps.EdcSyncFilesAppConfig',
     'bcpp_clinic_screening.apps.AppConfig',
 ]
 
-
-if 'test' in sys.argv:
-    MIGRATION_MODULES = {
-        "django_crypto_fields": None,
-        "edc_export": None,
-        "edc_sync": None,
-        'edc_map': None,
-        'admin': None,
-        "auth": None,
-        "edc_sync_files": None,
-        'sessions': None,
-    }
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -166,6 +156,8 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, APP_NAME, 'static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, APP_NAME, 'media')
+
+CURRENT_MAP_AREA = 'eligibility_test_community'
 
 MEDIA_URL = '/media/'
 
